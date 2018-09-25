@@ -24,8 +24,8 @@ public class LogAppender extends WriterAppender {
                             if (textArea.getText().length() == 0) {
                                 textArea.setText(message);
                             } else {
-                                textArea.getSelectionEnd();
                                 textArea.insert(message,textArea.getText().length());
+                                textArea.getSelectionEnd();
                             }
                         }
                     } catch (final Throwable t) {

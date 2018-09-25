@@ -42,13 +42,16 @@ public class Gateway {
 			new Thread(mux).start();
 		}
 		
-		BaseChannel ch = ChannelFactory.getBaseChannel(mux.getISOChannel());
-		int port = 0;
-		if(ch.getSocket() != null)
-			port = ch.getSocket().getPort();
-		else 
-			port = ch.getServerSocket().getLocalPort();
-		
-		log.info("Open connection ["+ch.getName()+"] port["+port+"]");
+		try {
+			BaseChannel ch = ChannelFactory.getBaseChannel(mux.getISOChannel());
+			int port = 0;
+			if(ch.getSocket() != null)
+				port = ch.getSocket().getPort();
+			else 
+				port = ch.getServerSocket().getLocalPort();
+			
+			log.info("Open connection ["+ch.getName()+"] port["+port+"]");
+		}catch(Exception e) {
+		}
 	}
 }

@@ -9,11 +9,12 @@ import com.mpc.iso.ISOMux;
 
 public class ChannelFactory {
 	
-	public static void createInstance(Channel channel) {
+	public static ISOMux createInstance(Channel channel) {
 		BaseChannel ch = getBaseChannel((ISOChannel) channel);
 		ISOLog isoLog = new ISOLog("config/log4J.properties");
 		ISOMux mux = new ISOMux(ch,isoLog);
 		new Gateway(mux,channel.isDisablePort());
+		return mux;
 	}
 	
 	public static BaseChannel getBaseChannel(ISOChannel channel) {

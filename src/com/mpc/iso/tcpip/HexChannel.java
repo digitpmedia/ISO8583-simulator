@@ -8,53 +8,38 @@ import org.jpos.iso.ISOPackager;
 import org.jpos.iso.channel.HEXChannel;
 
 public class HexChannel extends HEXChannel implements Channel{
+	private HeaderConfiguration headerConfiguration;
 	private boolean disablePort;
 	
-	public HexChannel() {}
+	private HexChannel() {}
 
-	public static HexChannel getInstantce() {
+	public static HexChannel Builder() {
 		return new HexChannel();
 	}
 	
-	private HexChannel(ISOPackager packager, byte[] TPDU,
+	private HexChannel(String channelName,
+			ISOPackager packager, 
+			byte[] TPDU,
 			ServerSocket serverSocket) throws IOException {
 		super(packager, TPDU, serverSocket);
+		this.setName(channelName);
 	}
 	
-	private HexChannel (String host, int port, ISOPackager p, byte[] TPDU) {
+	private HexChannel (String channelName,
+			String host, 
+			int port, 
+			ISOPackager p, 
+			byte[] TPDU) {
 		super(host, port, p, TPDU);
+		this.setName(channelName);
 	}
 
-	@Override
-	protected void sendMessageLength(int len) throws IOException {
-		if (len > 0xFFFF)
-			throw new IOException (len + " exceeds maximum length");
-		byte[] b = new byte[2];
-		b[0] =(byte)( len >> 8 );
-		b[1] =(byte)( len );
-		
-		serverOut.write (b);
-	}
-	
-	protected int getMessageLength() throws IOException, ISOException {
-		byte[] b = new byte[2];
-		serverIn.readFully(b,0,2);
-		int len =  checkSigned(( ( b[0]) << 8), 65536) + checkSigned(b[1], 256);
-		return len;
-	}
-	
-	private int checkSigned(int x, int shift){
-		if(x < 0){
-			return shift + x;
-		}
-		return x;
-	}
 	
 	@Override
 	public Channel Client(String channelName, String host, int port, ISOPackager packager, boolean disablePort) {
 		this.disablePort = disablePort;
 		if(!disablePort){
-			return new HexChannel(host,port,packager,null);
+			return new HexChannel(channelName,host,port,packager,null);
 		}
         return new HexChannel();
 	}
@@ -64,7 +49,7 @@ public class HexChannel extends HEXChannel implements Channel{
 		this.disablePort = disablePort;
 		if(!disablePort){
 			try {
-				return new HexChannel(packager, null, new ServerSocket(port));
+				return new HexChannel(channelName,packager, null, new ServerSocket(port));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -75,5 +60,28 @@ public class HexChannel extends HEXChannel implements Channel{
 	@Override
 	public boolean isDisablePort() {
 		return disablePort;
+	}
+	
+	@Override
+	public void setHeaderConfiguration(HeaderConfiguration hedearConfiguration) {
+		this.headerConfiguration = hedearConfiguration;
+	}
+	
+	@Override
+	protected void sendMessageLength(int len) throws IOException {
+		if(headerConfiguration != null) {
+			headerConfiguration.sendMessageLength(len);
+		}else {
+			super.sendMessageLength(len);
+		}
+	}
+	
+	@Override
+	protected int getMessageLength() throws IOException, ISOException {
+		if(headerConfiguration != null) {
+			return headerConfiguration.getMessageLength(serverIn);
+		}else {
+			return super.getMessageLength();
+		}
 	}
 }

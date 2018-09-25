@@ -3,6 +3,7 @@ package com.mpc.iso.tcpip;
 import java.io.IOException;
 import java.net.ServerSocket;
 
+import org.jpos.iso.ISOException;
 import org.jpos.iso.ISOPackager;
 import org.jpos.iso.channel.ASCIIChannel;
 
@@ -12,10 +13,11 @@ import org.jpos.iso.channel.ASCIIChannel;
  */
 public class AsciiChannel extends ASCIIChannel implements Channel{
 	private boolean disablePort = false;
+	private HeaderConfiguration headerConfiguration;
 	
-	public AsciiChannel() {}
+	private AsciiChannel() {}
 	
-	public static AsciiChannel getInstantce() {
+	public static AsciiChannel Builder() {
 		return new AsciiChannel();
 	}
 	
@@ -55,4 +57,28 @@ public class AsciiChannel extends ASCIIChannel implements Channel{
 	public boolean isDisablePort() {
 		return disablePort;
 	}
+
+	@Override
+	public void setHeaderConfiguration(HeaderConfiguration hedearConfiguration) {
+		this.headerConfiguration = hedearConfiguration;
+	}
+	
+	@Override
+	protected void sendMessageLength(int len) throws IOException {
+		if(headerConfiguration != null) {
+			serverOut.write(headerConfiguration.sendMessageLength(len));
+		}else {
+			super.sendMessageLength(len);
+		}
+	}
+	
+	@Override
+	protected int getMessageLength() throws IOException, ISOException {
+		if(headerConfiguration != null) {
+			return headerConfiguration.getMessageLength(serverIn);
+		}else {
+			return super.getMessageLength();
+		}
+	}
+
 }
