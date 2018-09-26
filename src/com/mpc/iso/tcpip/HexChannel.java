@@ -70,7 +70,7 @@ public class HexChannel extends HEXChannel implements Channel{
 	@Override
 	protected void sendMessageLength(int len) throws IOException {
 		if(headerConfiguration != null) {
-			headerConfiguration.sendMessageLength(len);
+			serverOut.write(headerConfiguration.sendMessageLength(len));
 		}else {
 			super.sendMessageLength(len);
 		}

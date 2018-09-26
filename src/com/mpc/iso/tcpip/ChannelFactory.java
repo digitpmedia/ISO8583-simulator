@@ -7,6 +7,10 @@ import com.mpc.iso.Gateway;
 import com.mpc.iso.ISOLog;
 import com.mpc.iso.ISOMux;
 
+/***
+ * @author yovi.putra
+ * @date Sep 26, 2018
+ */
 public class ChannelFactory {
 	
 	public static ISOMux createInstance(Channel channel) {
