@@ -18,7 +18,14 @@ public class DJPHeaderConfigListener implements HeaderConfiguration{
 		byte b[] = new byte[2];
 		b[0] = (byte) (len);
 		b[1] = (byte) (len>>8);
-		return String.format("ISOMPNGEN2%c%c", b[0],b[1]).getBytes();
+		
+		byte header[] = "ISOMPNGEN2".getBytes();
+		
+		byte[] c = new byte[header.length + b.length];
+		System.arraycopy(header, 0, c, 0, header.length);
+		System.arraycopy(b, 0, c, header.length, b.length);
+		
+		return c;
 	}
 
 	@Override

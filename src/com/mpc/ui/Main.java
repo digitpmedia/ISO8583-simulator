@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -13,7 +14,7 @@ import javax.swing.JTextArea;
 
 import org.jpos.iso.ISOException;
 import org.jpos.iso.ISOMsg;
-import org.jpos.iso.packager.ISO87APackager;
+import org.jpos.iso.packager.GenericPackager;
 
 import com.mpc.iso.ISOMux;
 import com.mpc.iso.tcpip.Channel;
@@ -50,11 +51,19 @@ public class Main{
 	}
 
 	public void initIso() throws IOException, ISOException {
+		GenericPackager packager = null;
+		try {
+			packager = new GenericPackager("config/djpIso.xml");
+		} catch (ISOException e) {
+			e.printStackTrace();
+		}
+		
 		UILogAppenderListener.setTextArea(taLogging);
-		Channel channel = HexChannel.Builder().Server(
-				"ServerChannel", 
-				8899, 
-				new ISO87APackager(), 
+		Channel channel = HexChannel.Builder().Client(
+				"DJPServerChannel", 
+				"10.10.77.42",
+				20002,
+				packager, 
 				false);
 		channel.setHeaderConfiguration(new DJPHeaderConfigListener());
 		mux = ChannelFactory.createInstance(channel);
