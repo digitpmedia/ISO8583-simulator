@@ -13,7 +13,7 @@ import org.jpos.iso.channel.ASCIIChannel;
  */
 public class AsciiChannel extends ASCIIChannel implements Channel{
 	private boolean disablePort = false;
-	private HeaderConfiguration headerConfiguration;
+	private ChannelHeader headerConfiguration;
 	
 	private AsciiChannel() {}
 	
@@ -59,14 +59,18 @@ public class AsciiChannel extends ASCIIChannel implements Channel{
 	}
 
 	@Override
-	public void setHeaderConfiguration(HeaderConfiguration hedearConfiguration) {
+	public void setHeaderConfiguration(ChannelHeader hedearConfiguration) {
 		this.headerConfiguration = hedearConfiguration;
 	}
 	
 	@Override
 	protected void sendMessageLength(int len) throws IOException {
 		if(headerConfiguration != null) {
-			serverOut.write(headerConfiguration.sendMessageLength(len));
+			try {
+				serverOut.write(headerConfiguration.setHeaderMessageLength(len));
+			} catch (ISOException e) {
+				e.printStackTrace();
+			}
 		}else {
 			super.sendMessageLength(len);
 		}
@@ -75,7 +79,7 @@ public class AsciiChannel extends ASCIIChannel implements Channel{
 	@Override
 	protected int getMessageLength() throws IOException, ISOException {
 		if(headerConfiguration != null) {
-			return headerConfiguration.getMessageLength(serverIn);
+			return headerConfiguration.getHeaderMessageLength(serverIn);
 		}else {
 			return super.getMessageLength();
 		}

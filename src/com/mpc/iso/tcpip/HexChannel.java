@@ -8,7 +8,7 @@ import org.jpos.iso.ISOPackager;
 import org.jpos.iso.channel.HEXChannel;
 
 public class HexChannel extends HEXChannel implements Channel{
-	private HeaderConfiguration headerConfiguration;
+	private ChannelHeader headerConfiguration;
 	private boolean disablePort;
 	
 	private HexChannel() {}
@@ -63,14 +63,19 @@ public class HexChannel extends HEXChannel implements Channel{
 	}
 	
 	@Override
-	public void setHeaderConfiguration(HeaderConfiguration hedearConfiguration) {
+	public void setHeaderConfiguration(ChannelHeader hedearConfiguration) {
 		this.headerConfiguration = hedearConfiguration;
 	}
 	
 	@Override
 	protected void sendMessageLength(int len) throws IOException {
 		if(headerConfiguration != null) {
-			serverOut.write(headerConfiguration.sendMessageLength(len));
+			try {
+				serverOut.write(headerConfiguration.setHeaderMessageLength(len));
+			} catch (ISOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}else {
 			super.sendMessageLength(len);
 		}
@@ -79,7 +84,7 @@ public class HexChannel extends HEXChannel implements Channel{
 	@Override
 	protected int getMessageLength() throws IOException, ISOException {
 		if(headerConfiguration != null) {
-			return headerConfiguration.getMessageLength(serverIn);
+			return headerConfiguration.getHeaderMessageLength(serverIn);
 		}else {
 			return super.getMessageLength();
 		}

@@ -22,12 +22,8 @@ public class UILogAppenderListener extends WriterAppender {
                 public void run() {
                     try {
                         if (textArea != null) {
-                            if (textArea.getText().length() == 0) {
-                                textArea.setText(message);
-                            } else {
-                                textArea.insert(message,textArea.getText().length());
-                                textArea.getSelectionEnd();
-                            }
+                            textArea.insert(message,textArea.getText().length());
+                            textArea.setCaretPosition(textArea.getDocument().getLength()-1);
                         }
                     } catch (final Throwable t) {
                         System.out.println("Unable to append log to text area: "+ t.getMessage());

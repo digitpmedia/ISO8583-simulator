@@ -13,7 +13,7 @@ public interface Channel extends ISOChannel {
 	
 	Channel Server(String channelName, int port, ISOPackager packager, boolean disablePort);
 	
-	void setHeaderConfiguration(HeaderConfiguration hedearConfiguration);
+	void setHeaderConfiguration(ChannelHeader hedearConfiguration);
 	
 	boolean isDisablePort();
 }
