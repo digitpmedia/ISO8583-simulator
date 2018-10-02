@@ -84,5 +84,4 @@ public class AsciiChannel extends ASCIIChannel implements Channel{
 			return super.getMessageLength();
 		}
 	}
-
 }

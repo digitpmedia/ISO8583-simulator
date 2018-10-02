@@ -33,4 +33,9 @@ public class Configuration {
 	public void setHeaderConfig(HeaderConfig headerConfig) {
 		this.headerConfig = headerConfig;
 	}
+	@Override
+	public String toString() {
+		return "Configuration [ip=" + ip + ", port=" + port + ", CustomPackager=" + CustomPackager + ", headerConfig="
+				+ headerConfig + "]";
+	}
 }

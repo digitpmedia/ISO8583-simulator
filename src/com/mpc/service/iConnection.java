@@ -1,11 +1,10 @@
 package com.mpc.service;
 
-import org.jpos.iso.ISOMUX;
-
-import com.mpc.iso.tcpip.Channel;
+import com.mpc.iso.ISOMux;
+import com.mpc.model.Configuration;
 
 public interface iConnection {
-	ISOMUX start(Channel channel);
-	ISOMUX stop(Channel channel);
-	ISOMUX pause(Channel channel);
+	ISOMux start(Configuration configuration);
+	void stop(ISOMux mux);
+	void pause(ISOMux mux);
 }

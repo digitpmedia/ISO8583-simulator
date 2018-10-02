@@ -11,32 +11,25 @@ public class HeaderConfig {
 		ASCII, HEX
 	}
 	
-	private int headerLength;
 	private String startValue;
 	private String middleValue;
 	private String endValue;
 	private HEADER_TYPE headerType;
 	
-	public int getHeaderLength() {
-		return headerLength;
-	}
-	public void setHeaderLength(int headerLength) {
-		this.headerLength = headerLength;
-	}
 	public String getStartValue() {
-		return startValue;
+		return startValue == null ? "" : startValue;
 	}
 	public void setStartValue(String startValue) {
 		this.startValue = startValue;
 	}
 	public String getMiddleValue() {
-		return middleValue;
+		return middleValue == null ? "" : middleValue;
 	}
 	public void setMiddleValue(String middleValue) {
 		this.middleValue = middleValue;
 	}
 	public String getEndValue() {
-		return endValue;
+		return endValue == null ? "" : endValue;
 	}
 	public void setEndValue(String endValue) {
 		this.endValue = endValue;
@@ -46,5 +39,9 @@ public class HeaderConfig {
 	}
 	public void setHeaderType(HEADER_TYPE headerType) {
 		this.headerType = headerType;
+	}
+	@Override
+	public String toString() {
+		return startValue+middleValue+endValue;
 	}
 }

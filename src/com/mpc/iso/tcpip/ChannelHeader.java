@@ -46,20 +46,33 @@ public abstract class ChannelHeader {
 		return sorting;
 	}
 	
+	protected int getHeaderLength() {
+		int len = 0;
+		//String header = headerConfig.toString().replace(HeaderConfig.TAG_LEN, "");
+		if(headerConfig.getHeaderType() == HEADER_TYPE.HEX) {
+			len = 2;
+		}else
+			len = 4;
+		
+		if(len<0) len =0;
+		
+		return len;
+	}
+	
 	protected byte[] setHeaderMessageLength(int len) throws IOException, ISOException {
 		if (len > 0xFFFF)
 			throw new IOException (len + " exceeds maximum length");
 
 		if(headerConfig.getHeaderType() == HEADER_TYPE.HEX) {
-			return ISOUtil.zeropad (Integer.toString (len % 0xFFFF,16), headerConfig.getHeaderLength()).getBytes();
+			return ISOUtil.zeropad (Integer.toString (len % 0xFFFF,16), getHeaderLength()).getBytes();
 		}else {
-			return ISOUtil.zeropad (Integer.toString(len), headerConfig.getHeaderLength()).getBytes();
+			return ISOUtil.zeropad (Integer.toString(len), getHeaderLength()).getBytes();
 		}
 	}
 
 	protected int getHeaderMessageLength(DataInputStream serverIn) throws IOException {
-		byte b[] = new byte[headerConfig.getHeaderLength()];
-		serverIn.readFully(b,0,headerConfig.getHeaderLength());
+		byte b[] = new byte[getHeaderLength()];
+		serverIn.readFully(b,0,getHeaderLength());
 		return serverIn.available();
 	}
 }

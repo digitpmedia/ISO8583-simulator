@@ -43,15 +43,22 @@ public class Gateway {
 		}
 		
 		try {
-			BaseChannel ch = ChannelFactory.getBaseChannel(mux.getISOChannel());
+			String host = "";
 			int port = 0;
-			if(ch.getSocket() != null)
+			BaseChannel ch = ChannelFactory.getBaseChannel(mux.getISOChannel());
+
+			if(ch.getSocket() != null) {
+				host = ch.getSocket().getLocalAddress().getHostAddress();
 				port = ch.getSocket().getPort();
-			else 
+			}else if(ch.getServerSocket() != null) {
+				host = ch.getServerSocket().getInetAddress().getHostAddress();
 				port = ch.getServerSocket().getLocalPort();
-			
-			log.info("Open connection ["+ch.getName()+"] port["+port+"]");
+			}else {
+				port = ch.getPort();
+			}
+			log.info("Open connection ["+ch.getName()+"] ip["+host+"] port["+port+"]");
 		}catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 }

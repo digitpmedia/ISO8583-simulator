@@ -52,8 +52,10 @@ public class ConnectionBuilder {
 	
 	private ISOPackager getPackager() throws ISOException {
 		if(config.getCustomPackager().isEmpty()) {
+			System.out.println("Create packager iso87");
 			return new ISO87APackager();
 		}else {
+			System.out.println("Create packager " + config.getCustomPackager());
 			return new GenericPackager("iso/" + config.getCustomPackager());
 		}
 	}
