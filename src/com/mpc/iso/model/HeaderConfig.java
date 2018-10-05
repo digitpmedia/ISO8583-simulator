@@ -1,4 +1,4 @@
-package com.mpc.model;
+package com.mpc.iso.model;
 
 /**
  * @author yovi.putra
@@ -6,11 +6,7 @@ package com.mpc.model;
  */
 public class HeaderConfig {
 	public static String TAG_LEN = "_LEN_MSG_";
-	
-	public static enum HEADER_TYPE{
-		ASCII, HEX
-	}
-	
+	private int headerLength;
 	private String startValue;
 	private String middleValue;
 	private String endValue;
@@ -34,6 +30,12 @@ public class HeaderConfig {
 	public void setEndValue(String endValue) {
 		this.endValue = endValue;
 	}
+	public int getHeaderLength() {
+		return headerLength;
+	}
+	public void setHeaderLength(int headerLength) {
+		this.headerLength = headerLength;
+	}
 	public HEADER_TYPE getHeaderType() {
 		return headerType;
 	}
@@ -43,5 +45,12 @@ public class HeaderConfig {
 	@Override
 	public String toString() {
 		return startValue+middleValue+endValue;
+	}
+	
+	public int getLength() {
+		return startValue.replace(TAG_LEN, "").length() + 
+			   middleValue.replace(TAG_LEN, "").length() + 
+			   endValue.replace(TAG_LEN, "").length() + 
+			   headerLength;
 	}
 }

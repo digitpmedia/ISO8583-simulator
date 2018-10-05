@@ -4,6 +4,8 @@ import org.jpos.iso.ISOChannel;
 import org.jpos.iso.ISOMUX;
 import org.jpos.util.LogSource;
 
+import com.mpc.iso.services.impl.GatewayListener;
+
 public class ISOMux extends ISOMUX{
 	public ISOMux(ISOChannel channel, ISOLog isoLog) {
 		super(channel);

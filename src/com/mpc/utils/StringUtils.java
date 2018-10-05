@@ -1,4 +1,4 @@
-package com.mpc.iso.utils;
+package com.mpc.utils;
 
 public class StringUtils {
 	public static String padRight(String data,String padding, int length){

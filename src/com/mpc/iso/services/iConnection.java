@@ -1,7 +1,7 @@
-package com.mpc.service;
+package com.mpc.iso.services;
 
 import com.mpc.iso.ISOMux;
-import com.mpc.model.Configuration;
+import com.mpc.iso.model.Configuration;
 
 public interface iConnection {
 	ISOMux start(Configuration configuration);

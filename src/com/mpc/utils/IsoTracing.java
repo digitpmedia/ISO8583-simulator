@@ -1,4 +1,4 @@
-package com.mpc.iso.utils;
+package com.mpc.utils;
 
 import org.apache.log4j.Logger;
 import org.jpos.iso.ISOException;

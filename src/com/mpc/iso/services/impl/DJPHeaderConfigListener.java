@@ -1,9 +1,9 @@
-package com.mpc.iso.tcpip;
+package com.mpc.iso.services.impl;
 
-import java.io.DataInputStream;
 import java.io.IOException;
 
-import com.mpc.model.HeaderConfig;
+import com.mpc.iso.creational.ChannelHeader;
+import com.mpc.iso.model.HeaderConfig;
 
 /***
  * @author yovi.putra
@@ -21,13 +21,13 @@ public class DJPHeaderConfigListener extends ChannelHeader{
 		byte b[] = new byte[2];
 		b[0] = (byte) (len);
 		b[1] = (byte) (len>>8);
-		return build(b);
-	}
-
-	@Override
-	public int getHeaderMessageLength(DataInputStream serverIn) throws IOException{
-		byte[] b = new byte[12];
-		serverIn.readFully(b,0,12);
-		return serverIn.available();
+		
+		byte header[] = "ISOMPNGEN2".getBytes();
+		
+		byte[] c = new byte[header.length + b.length];
+		System.arraycopy(header, 0, c, 0, header.length);
+		System.arraycopy(b, 0, c, header.length, b.length);
+		
+		return c;//build(b);
 	}
 }

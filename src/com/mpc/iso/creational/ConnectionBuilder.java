@@ -1,25 +1,22 @@
-package com.mpc.service;
+package com.mpc.iso.creational;
 
 import org.jpos.iso.ISOException;
 import org.jpos.iso.ISOPackager;
 import org.jpos.iso.packager.GenericPackager;
 import org.jpos.iso.packager.ISO87APackager;
 
-import com.mpc.iso.tcpip.AsciiChannel;
-import com.mpc.iso.tcpip.Channel;
-import com.mpc.iso.tcpip.ChannelHeader;
-import com.mpc.iso.tcpip.DJPHeaderConfigListener;
-import com.mpc.iso.tcpip.GenericHeaderConfigListener;
-import com.mpc.iso.tcpip.HexChannel;
-import com.mpc.model.Configuration;
-import com.mpc.model.HeaderConfig;
-import com.mpc.model.HeaderConfig.HEADER_TYPE;
+import com.mpc.iso.model.Configuration;
+import com.mpc.iso.model.HeaderConfig;
+import com.mpc.iso.services.iChannel;
+import com.mpc.iso.services.impl.Channel;
+import com.mpc.iso.services.impl.DJPHeaderConfigListener;
+import com.mpc.iso.services.impl.GenericHeaderConfigListener;
 
 /***
  * @author yovi.putra
  */
 public class ConnectionBuilder {
-	private Channel channel;
+	private iChannel channel;
 	private Configuration config;
 	private HeaderConfig headerConfig;
 	
@@ -32,19 +29,11 @@ public class ConnectionBuilder {
 		return new ConnectionBuilder(config);
 	}
 	
-	public Channel createConnection() throws ISOException {
-		if(this.headerConfig.getHeaderType() == HEADER_TYPE.HEX) {
-			if(config.getIp().isEmpty()) {
-				channel = HexChannel.Builder().Server("", config.getPort(), getPackager(), false);
-			}else {
-				channel = HexChannel.Builder().Client("", config.getIp(), config.getPort(),getPackager() , false);
-			}
+	public iChannel createConnection() throws ISOException {
+		if(config.getIp().isEmpty()) {
+			channel = Channel.Builder().Server("MyServer", config.getPort(), getPackager(), false);
 		}else {
-			if(config.getIp().isEmpty()) {
-				channel = AsciiChannel.Builder().Server("", config.getPort(), getPackager(), false);
-			}else {
-				channel = AsciiChannel.Builder().Client("", config.getIp(), config.getPort(),getPackager() , false);
-			}
+			channel = Channel.Builder().Client("MyClient", config.getIp(), config.getPort(),getPackager() , false);
 		}
 		channel.setHeaderConfiguration(getChannelHeader());
 		return channel;

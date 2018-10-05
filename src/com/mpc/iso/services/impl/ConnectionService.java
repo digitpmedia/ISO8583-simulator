@@ -1,12 +1,14 @@
-package com.mpc.service;
+package com.mpc.iso.services.impl;
 
 import org.apache.log4j.Logger;
 import org.jpos.iso.ISOException;
 
 import com.mpc.iso.ISOMux;
-import com.mpc.iso.tcpip.Channel;
-import com.mpc.iso.tcpip.ChannelFactory;
-import com.mpc.model.Configuration;
+import com.mpc.iso.creational.ChannelFactory;
+import com.mpc.iso.creational.ConnectionBuilder;
+import com.mpc.iso.model.Configuration;
+import com.mpc.iso.services.iChannel;
+import com.mpc.iso.services.iConnection;
 
 public class ConnectionService implements iConnection{
 	private Logger log = Logger.getLogger(getClass().getSimpleName());
@@ -14,7 +16,7 @@ public class ConnectionService implements iConnection{
 	@Override
 	public ISOMux start(Configuration configuration) {
 		log.trace("Configuration " + configuration);
-		Channel channel = null;
+		iChannel channel = null;
 		try {
 			channel = ConnectionBuilder.setConfiguration(configuration).createConnection();
 		} catch (ISOException e) {

@@ -1,4 +1,4 @@
-package com.mpc.iso.utils;
+package com.mpc.utils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,7 +23,7 @@ public class IOFile {
 	 * @return
 	 */
 	public static File WriteFile(String dir, String filename, String content, String extention, boolean isAppend) {
-		log.info("Writing file " + filename);
+		log.info("Writing file " + dir);
 		if (checkDirectory(dir, false)) {
 			String ext = extention == null || extention.trim().isEmpty() ? "" : "." + extention;
 			FileOutputStream fop = null;
@@ -56,10 +56,10 @@ public class IOFile {
 					e.printStackTrace();
 				}
 			}
-			log.info("Write file " + filename + " done");
+			log.info("Write file " + dir + " done");
 			return file;
 		}
-		log.info("Write file " + filename + " failed");
+		log.info("Write file " + dir + " failed");
 		return null;
 	}
 
@@ -72,7 +72,7 @@ public class IOFile {
 			br = new BufferedReader(fr);
 			String sCurrentLine="";
 			while ((sCurrentLine = br.readLine()) != null) {
-				content += sCurrentLine;
+				content += sCurrentLine +"\r\n";
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

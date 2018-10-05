@@ -6,16 +6,23 @@ import org.jpos.iso.ISOException;
 import org.jpos.iso.ISOMsg;
 import org.jpos.iso.ISOSource;
 
+import com.mpc.iso.creational.FormaterService;
+import com.mpc.utils.MsgType;
+import com.mpc.utils.RcUtils;
+
 public class GeneralFormaterServiceImpl extends FormaterService{
 	
 	@Override
 	public void processMessage(ISOSource isoSrc, ISOMsg isoMsg) throws ISOException, IOException {
+		int msgtype = 800;
 		if(isoMsg.isRequest()) {
-			isoMsg.set(39,"00");
-			isoMsg.set(4, "9000000000");
-			isoMsg.set(48, "024331241021000Nugroho Juli Purnama                              JALAN LAPANGAN BANTENG TIMUR NO.2-4               41112210005052013000000000000000000000000000000000B4CEE6I1FHF5FNKN");
+			msgtype = Integer.parseInt(isoMsg.getMTI());
+			if(MsgType.isNetwork(msgtype)) {
+				isoMsg.set(39,RcUtils.APPROVED);
+			}else {
+				Response.searching(isoMsg);
+			}
 			isoMsg.setResponseMTI();
-			isoSrc.send(isoMsg);
 		}
 	}
 

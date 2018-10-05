@@ -1,11 +1,12 @@
-package com.mpc.iso.tcpip;
+package com.mpc.iso.creational;
 
 import org.jpos.iso.BaseChannel;
 import org.jpos.iso.ISOChannel;
 
-import com.mpc.iso.Gateway;
 import com.mpc.iso.ISOLog;
 import com.mpc.iso.ISOMux;
+import com.mpc.iso.services.iChannel;
+import com.mpc.iso.services.impl.Gateway;
 
 /***
  * @author yovi.putra
@@ -13,7 +14,7 @@ import com.mpc.iso.ISOMux;
  */
 public class ChannelFactory {
 	
-	public static ISOMux createInstance(Channel channel) {
+	public static ISOMux createInstance(iChannel channel) {
 		BaseChannel ch = getBaseChannel((ISOChannel) channel);
 		ISOLog isoLog = new ISOLog("config/log4J.properties");
 		ISOMux mux = new ISOMux(ch,isoLog);

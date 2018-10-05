@@ -1,4 +1,4 @@
-package com.mpc.iso;
+package com.mpc.iso.services.impl;
 
 import java.io.InputStream;
 
@@ -8,7 +8,8 @@ import org.jpos.iso.ISOChannel;
 import org.jpos.iso.ISOException;
 import org.jpos.iso.packager.GenericPackager;
 
-import com.mpc.iso.tcpip.ChannelFactory;
+import com.mpc.iso.ISOMux;
+import com.mpc.iso.creational.ChannelFactory;
 
 public class Gateway {
 	Logger log = Logger.getLogger(getClass().getSimpleName());

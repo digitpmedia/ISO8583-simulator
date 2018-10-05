@@ -1,4 +1,4 @@
-package com.mpc.model;
+package com.mpc.iso.model;
 
 /***
  * @author yovi.putra

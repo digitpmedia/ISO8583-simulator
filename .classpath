@@ -5,6 +5,7 @@
 	<classpathentry kind="src" path="libs"/>
 	<classpathentry kind="src" path="config"/>
 	<classpathentry kind="src" path="iso"/>
+	<classpathentry kind="src" path="data"/>
 	<classpathentry kind="lib" path="libs/jpos.jar"/>
 	<classpathentry kind="lib" path="libs/jdom.jar"/>
 	<classpathentry kind="lib" path="libs/log4j-1.2.17.jar"/>

@@ -1,6 +1,7 @@
-package com.mpc.iso.tcpip;
+package com.mpc.iso.services.impl;
 
-import com.mpc.model.HeaderConfig;
+import com.mpc.iso.creational.ChannelHeader;
+import com.mpc.iso.model.HeaderConfig;
 
 public class GenericHeaderConfigListener extends ChannelHeader{
 
