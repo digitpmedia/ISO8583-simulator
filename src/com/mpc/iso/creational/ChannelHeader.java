@@ -67,9 +67,9 @@ public abstract class ChannelHeader {
 			throw new IOException (len + " exceeds maximum length");
 
 		if(headerConfig.getHeaderType() == HEADER_TYPE.HEX) {
-			return ISOUtil.zeropad (Integer.toString (len % 0xFFFF,16), getHeaderLength()).getBytes();
+			return ISOUtil.zeropad (Integer.toString (len % 0xFFFF,16), headerConfig.getHeaderLength()).getBytes();
 		}else {
-			return ISOUtil.zeropad (Integer.toString(len), getHeaderLength()).getBytes();
+			return ISOUtil.zeropad (Integer.toString(len),  headerConfig.getHeaderLength()).getBytes();
 		}
 	}
 

@@ -20,12 +20,6 @@ public class GatewayListener implements ISORequestListener{
 			 * Using formater service
 			 * send, receive or process messaging
 			 */
-			/*BaseChannel channel = (BaseChannel) ((ISOMUX) isoSrc).getISOChannel();
-            if(isoMsg.isRequest()) {
-            	IsoTracing.printRowMessage(channel.getName(), isoMsg, true);
-            }else {
-            	IsoTracing.printRowMessage(channel.getName(), isoMsg, false);
-            }*/
             if(formaterService == null) {
             	formaterService = new GeneralFormaterServiceImpl();
             }

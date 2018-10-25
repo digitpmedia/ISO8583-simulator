@@ -44,13 +44,13 @@ public class HeaderConfig {
 	}
 	@Override
 	public String toString() {
-		return startValue+middleValue+endValue;
+		return getStartValue()+getMiddleValue()+getEndValue();
 	}
 	
 	public int getLength() {
-		return startValue.replace(TAG_LEN, "").length() + 
-			   middleValue.replace(TAG_LEN, "").length() + 
-			   endValue.replace(TAG_LEN, "").length() + 
+		return getStartValue().replace(TAG_LEN, "").length() + 
+			   getMiddleValue().replace(TAG_LEN, "").length() + 
+			   getEndValue().replace(TAG_LEN, "").length() + 
 			   headerLength;
 	}
 }

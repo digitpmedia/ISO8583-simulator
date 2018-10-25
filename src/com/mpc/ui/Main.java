@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -33,7 +34,11 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.jpos.iso.ISODate;
 import org.jpos.iso.ISOException;
+import org.jpos.iso.ISOField;
+import org.jpos.iso.ISOMsg;
+import org.jpos.iso.ISOUtil;
 
 import com.mpc.iso.ISOMux;
 import com.mpc.iso.model.Configuration;
@@ -45,14 +50,12 @@ import com.mpc.iso.services.impl.ConnectionService;
 import com.mpc.utils.IOFile;
 
 public class Main implements ChangeListener, ActionListener{
-	public static final String TAG_DEFAULT = "-- default --";
-	private static final String FILE_DATA_RESPONSE = "data/data_response.vsim";
 	private ISOMux mux = null;
 	private iConnection connectionService;
 	private iChannel channel;
 	
 	/***
-	 * Tab Activtys
+	 * Tab Activity
 	 */
 	private JFrame frmVsim;
 	private JTextArea taLogging;
@@ -69,6 +72,7 @@ public class Main implements ChangeListener, ActionListener{
 	private JCheckBox cbCustomHeader;
 	private JCheckBox cbMode;
 	private JButton btClear;
+	private JButton btnSend;
 	/***
 	 * Tab Data
 	 */
@@ -273,7 +277,7 @@ public class Main implements ChangeListener, ActionListener{
 		
 		taLogging = new JTextArea();
 		taLogging.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
-		taLogging.setFont(new Font("Monospaced", Font.PLAIN, 12));
+		taLogging.setFont(new Font("Monospaced", Font.PLAIN, 11));
 		taLogging.setEditable(false);
 		spLogging.setViewportView(taLogging);
 		taLogging.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -289,13 +293,17 @@ public class Main implements ChangeListener, ActionListener{
 		cbWrapLine.setFont(new Font("Dialog", Font.PLAIN, 11));
 		cbWrapLine.addChangeListener(this);
 		cbWrapLine.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+		
+		JPanel panel_4 = new JPanel();
 		GroupLayout gl_panel_3 = new GroupLayout(panel_3);
 		gl_panel_3.setHorizontalGroup(
 			gl_panel_3.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_3.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 274, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_panel_3.createParallelGroup(Alignment.TRAILING, false)
+						.addComponent(panel_4, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(panel, GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE))
+					.addGap(18)
 					.addGroup(gl_panel_3.createParallelGroup(Alignment.TRAILING)
 						.addGroup(gl_panel_3.createSequentialGroup()
 							.addGap(10)
@@ -316,12 +324,33 @@ public class Main implements ChangeListener, ActionListener{
 								.addComponent(btClear, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
 								.addComponent(cbWrapLine))
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(spLogging, GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE))
+							.addComponent(spLogging, GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE))
 						.addGroup(gl_panel_3.createSequentialGroup()
 							.addGap(28)
-							.addComponent(panel, GroupLayout.PREFERRED_SIZE, 314, GroupLayout.PREFERRED_SIZE)))
+							.addComponent(panel, GroupLayout.PREFERRED_SIZE, 314, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 133, GroupLayout.PREFERRED_SIZE)))
 					.addGap(14))
 		);
+		
+		btnSend = new JButton("Send");
+		btnSend.addActionListener(this);
+		GroupLayout gl_panel_4 = new GroupLayout(panel_4);
+		gl_panel_4.setHorizontalGroup(
+			gl_panel_4.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_4.createSequentialGroup()
+					.addGap(84)
+					.addComponent(btnSend)
+					.addContainerGap(101, Short.MAX_VALUE))
+		);
+		gl_panel_4.setVerticalGroup(
+			gl_panel_4.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_4.createSequentialGroup()
+					.addGap(55)
+					.addComponent(btnSend)
+					.addContainerGap(55, Short.MAX_VALUE))
+		);
+		panel_4.setLayout(gl_panel_4);
 		panel_3.setLayout(gl_panel_3);
 		tabActivity.setLayout(gl_tabActivity);
 		
@@ -378,7 +407,7 @@ public class Main implements ChangeListener, ActionListener{
 		 * Get list file packager
 		 */
 		File files[] = IOFile.getFiles(new File("iso/"), null);
-		listbxPackager.addItem(TAG_DEFAULT);
+		listbxPackager.addItem(AppConstants.TAG_DEFAULT);
 		for(File f : files)
 			listbxPackager.addItem(f.getName());
 		
@@ -409,7 +438,7 @@ public class Main implements ChangeListener, ActionListener{
 	 * Init tab data content
 	 */
 	private void initTabDataContent() {
-		txDataResponse.setText(IOFile.ReadFile(FILE_DATA_RESPONSE));
+		txDataResponse.setText(IOFile.ReadFile(AppConstants.FILE_DATA_RESPONSE));
 	}
 	
 	public Configuration getConfiguration() throws ISOException {
@@ -423,7 +452,7 @@ public class Main implements ChangeListener, ActionListener{
 		}
 		
 		config.setPort(Integer.parseInt(txPort.getText()));
-		config.setCustomPackager(listbxPackager.getSelectedItem().toString().replace(TAG_DEFAULT, ""));
+		config.setCustomPackager(listbxPackager.getSelectedItem().toString().replace(AppConstants.TAG_DEFAULT, ""));
 		config.setHeaderConfig(header);
 		return config;
 	}
@@ -431,11 +460,15 @@ public class Main implements ChangeListener, ActionListener{
 	private HeaderConfig getHeaderConfit() {
 		HeaderConfig header = new HeaderConfig();
 		header.setHeaderType(HEADER_TYPE.valueOf(listbxHeaderType.getSelectedItem().toString()));
+		header.setHeaderLength(Integer.parseInt(txHeaderLength.getText()));
 		if(cbCustomHeader.isSelected()) {
-			header.setHeaderLength(Integer.parseInt(txHeaderLength.getText()));
 			header.setStartValue(txHeaderStartValue.getText());
 			header.setMiddleValue(txHeaderMidValue.getText());
 			header.setEndValue(txHeaderEndValue.getText());
+		}else {
+			header.setStartValue("");
+			header.setMiddleValue("");
+			header.setEndValue("");
 		}
 		return header;
 	}
@@ -456,7 +489,7 @@ public class Main implements ChangeListener, ActionListener{
 		    options,
 		    options[0]);
 		if(n == 0) {
-			IOFile.WriteFile(FILE_DATA_RESPONSE, "", txDataResponse.getText(), "", false);
+			IOFile.WriteFile(AppConstants.FILE_DATA_RESPONSE, "", txDataResponse.getText(), "", false);
 			initTabDataContent();
 		}
 	}
@@ -495,6 +528,24 @@ public class Main implements ChangeListener, ActionListener{
 				taLogging.setText("");
 			}else if(button.equals(btSaveResponse)) {
 				saveDataResponse();
+			}else if(button.equals(btnSend)) {
+				ISOMsg iso = new ISOMsg();
+				try {
+					//TODO sequence trace
+					Date d = new Date();
+					long mls = d.getTime();
+					long trace = mls % 1000000;
+					String traceNumber = ISOUtil.zeropad(String.valueOf(trace), 6);
+					
+					iso.setMTI("0800");
+					iso.set(new ISOField(7, ISODate.getDateTime(d)));		
+					iso.set(new ISOField(11, traceNumber));
+					iso.set(new ISOField(70,"001"));
+					mux.send(iso);
+				} catch (ISOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		}
 	}

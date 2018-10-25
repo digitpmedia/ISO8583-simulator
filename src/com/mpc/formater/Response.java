@@ -33,12 +33,13 @@ public class Response {
 	private static void composeResponse(ISOMsg isomsg, String value) {
 		value= value.replace("|", sperator);
 		String sData[] = value.split(sperator);
+		
 		int len = sData.length;
 		
 		try {
+			//Kondisi & value (len=2)
 			if(len == 2 && isMatch(isomsg, sData[0])) {
 				setISO(isomsg, sData[1]);
-				return;
 			}else {
 				isomsg.set(39,RcUtils.APPROVED);
 			}
@@ -97,6 +98,11 @@ public class Response {
 		return false;
 	}
 	
+	/***
+	 * @param bit
+	 * @return
+	 * Validasi bit file response
+	 */
 	private static boolean isValidBit(int bit) {
 		if(bit < 0 || bit > 128)
 			return false;
@@ -104,6 +110,14 @@ public class Response {
 			return true;
 	}
 	
+	/***
+	 * @param isomsg
+	 * @param value
+	 * @return
+	 * @throws Exception
+	 * 
+	 * Condition checking, left side sperator |
+	 */
 	private static void setISO(ISOMsg isomsg,String value) throws Exception {
 		if(value != null) {
 			String sValue[] = value.split(";");
@@ -113,6 +127,14 @@ public class Response {
 		}
 	}
 
+	/***
+	 * @param isomsg
+	 * @param bitData
+	 * @return
+	 * @throws Exception
+	 * 
+	 * set value with file response
+	 */
 	private static void setBit(ISOMsg isomsg,String bitData) throws Exception {
 		String sBitData[] = bitData.split(":");
 		String bit = sBitData[0];

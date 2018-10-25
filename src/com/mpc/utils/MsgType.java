@@ -15,7 +15,7 @@ public class MsgType {
 	public static final int REVERSAL_ADVICE_RESPONSE	= 430;
 	
 	public static boolean isNetwork(int mti){
-		return mti / 100 == 4;
+		return mti / 100 == 8;
 	}
 	
 	public static boolean isReversal(int mti){
