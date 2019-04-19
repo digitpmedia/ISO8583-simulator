@@ -7,7 +7,7 @@ import org.apache.log4j.spi.LoggingEvent;
 
 public class UILogAppenderListener extends WriterAppender {
 	private static volatile JTextArea textArea = null;
-	 
+	private final int MAX_LEN = 9999;
     public static void setTextArea(final JTextArea textArea) {
     	UILogAppenderListener.textArea = textArea;
     }
@@ -22,6 +22,9 @@ public class UILogAppenderListener extends WriterAppender {
                 public void run() {
                     try {
                         if (textArea != null) {
+                        	if(textArea.getDocument().getLength() > MAX_LEN) {
+                        		textArea.setText("");
+                        	}
                             textArea.insert(message,textArea.getText().length());
                             textArea.setCaretPosition(textArea.getDocument().getLength()-1);
                         }

@@ -8,8 +8,6 @@ import org.jpos.iso.ISOSource;
 import org.jpos.iso.packager.GenericPackager;
 
 import com.mpc.iso.creational.FormaterService;
-import com.mpc.utils.MsgType;
-import com.mpc.utils.RcUtils;
 
 public class GeneralFormaterServiceImpl extends FormaterService{
 	
@@ -52,17 +50,11 @@ public class GeneralFormaterServiceImpl extends FormaterService{
 	
 	@Override
 	public void processMessage(ISOSource isoSrc, ISOMsg isoMsg) throws ISOException, IOException {
-		int msgtype = 800;
 		if(isoMsg.isRequest()) {
-			msgtype = Integer.parseInt(isoMsg.getMTI());
-			if(MsgType.isNetwork(msgtype)) {
-				isoMsg.set(39,RcUtils.APPROVED);
-			}else {
-				Response.searching(isoMsg);
-			}
+			Response.searching(isoMsg);
 			isoMsg.setResponseMTI();
+			isoSrc.send(isoMsg);
 		}
-		isoSrc.send(isoMsg);
 	}
 
 	@Override

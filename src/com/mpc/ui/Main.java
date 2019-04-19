@@ -34,6 +34,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.jpos.iso.ISOBinaryField;
 import org.jpos.iso.ISODate;
 import org.jpos.iso.ISOException;
 import org.jpos.iso.ISOField;
@@ -48,6 +49,7 @@ import com.mpc.iso.services.iChannel;
 import com.mpc.iso.services.iConnection;
 import com.mpc.iso.services.impl.ConnectionService;
 import com.mpc.utils.IOFile;
+import javax.swing.SwingConstants;
 
 public class Main implements ChangeListener, ActionListener{
 	private ISOMux mux = null;
@@ -73,6 +75,8 @@ public class Main implements ChangeListener, ActionListener{
 	private JCheckBox cbMode;
 	private JButton btClear;
 	private JButton btnSend;
+	
+	private JCheckBox cbStrestTest;
 	/***
 	 * Tab Data
 	 */
@@ -81,6 +85,8 @@ public class Main implements ChangeListener, ActionListener{
 	 */
 	private JTextArea txDataResponse;
 	private JButton btSaveResponse;
+	private JTextField txNumTrx;
+	private JTextField txMaxTrx;
 	
 	/**
 	 * Launch the application.
@@ -295,19 +301,20 @@ public class Main implements ChangeListener, ActionListener{
 		cbWrapLine.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		
 		JPanel panel_4 = new JPanel();
+		panel_4.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		GroupLayout gl_panel_3 = new GroupLayout(panel_3);
 		gl_panel_3.setHorizontalGroup(
 			gl_panel_3.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_3.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panel_3.createParallelGroup(Alignment.TRAILING, false)
-						.addComponent(panel_4, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addGroup(gl_panel_3.createParallelGroup(Alignment.LEADING, false)
+						.addComponent(panel_4, 0, 0, Short.MAX_VALUE)
 						.addComponent(panel, GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE))
-					.addGap(18)
+					.addGap(50)
 					.addGroup(gl_panel_3.createParallelGroup(Alignment.TRAILING)
 						.addGroup(gl_panel_3.createSequentialGroup()
 							.addGap(10)
-							.addComponent(spLogging, GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE))
+							.addComponent(spLogging, GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE))
 						.addGroup(gl_panel_3.createSequentialGroup()
 							.addComponent(cbWrapLine)
 							.addPreferredGap(ComponentPlacement.UNRELATED)
@@ -335,20 +342,59 @@ public class Main implements ChangeListener, ActionListener{
 		
 		btnSend = new JButton("Send");
 		btnSend.addActionListener(this);
+		
+		cbStrestTest = new JCheckBox("Stresttest");
+		
+		txNumTrx = new JTextField();
+		txNumTrx.setColumns(10);
+		
+		JLabel lblNewLabel = new JLabel("Num Trx");
+		
+		JLabel lblPersecond = new JLabel("persecond");
+		lblPersecond.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		txMaxTrx = new JTextField();
+		txMaxTrx.setColumns(10);
+		
+		JLabel lblMaxTrx = new JLabel("Max Trx");
 		GroupLayout gl_panel_4 = new GroupLayout(panel_4);
 		gl_panel_4.setHorizontalGroup(
 			gl_panel_4.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_4.createSequentialGroup()
-					.addGap(84)
-					.addComponent(btnSend)
-					.addContainerGap(101, Short.MAX_VALUE))
+					.addContainerGap()
+					.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
+							.addComponent(cbStrestTest)
+							.addGroup(gl_panel_4.createSequentialGroup()
+								.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
+									.addComponent(lblMaxTrx, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
+									.addComponent(lblNewLabel))
+								.addPreferredGap(ComponentPlacement.RELATED)
+								.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING, false)
+									.addComponent(txNumTrx, Alignment.TRAILING, 0, 0, Short.MAX_VALUE)
+									.addComponent(txMaxTrx, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE))
+								.addGap(5)
+								.addComponent(lblPersecond, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
+								.addGap(22)
+								.addGap(50)))
+						.addComponent(btnSend, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 87, GroupLayout.PREFERRED_SIZE)))
 		);
 		gl_panel_4.setVerticalGroup(
 			gl_panel_4.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_4.createSequentialGroup()
-					.addGap(55)
-					.addComponent(btnSend)
-					.addContainerGap(55, Short.MAX_VALUE))
+					.addContainerGap()
+					.addComponent(cbStrestTest)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panel_4.createParallelGroup(Alignment.BASELINE)
+						.addComponent(txMaxTrx, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblMaxTrx))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panel_4.createParallelGroup(Alignment.BASELINE)
+						.addComponent(txNumTrx, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblPersecond)
+						.addComponent(lblNewLabel))
+					.addPreferredGap(ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+					.addComponent(btnSend))
 		);
 		panel_4.setLayout(gl_panel_4);
 		panel_3.setLayout(gl_panel_3);
@@ -529,27 +575,72 @@ public class Main implements ChangeListener, ActionListener{
 			}else if(button.equals(btSaveResponse)) {
 				saveDataResponse();
 			}else if(button.equals(btnSend)) {
-				ISOMsg iso = new ISOMsg();
-				try {
-					//TODO sequence trace
-					Date d = new Date();
-					long mls = d.getTime();
-					long trace = mls % 1000000;
-					String traceNumber = ISOUtil.zeropad(String.valueOf(trace), 6);
-					
-					iso.setMTI("0800");
-					iso.set(new ISOField(7, ISODate.getDateTime(d)));		
-					iso.set(new ISOField(11, traceNumber));
-					iso.set(new ISOField(70,"001"));
-					mux.send(iso);
-				} catch (ISOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				btSendAction();
 			}
 		}
 	}
 	
+	/***
+	 * Button Send Action 
+	 */
+	public void btSendAction() {
+		if(cbStrestTest.isSelected()) {
+			final int maxTrx = Integer.parseInt(txMaxTrx.getText());
+			final int numTrx = Integer.parseInt(txNumTrx.getText());
+			new Thread(new Runnable() {
+				public void run() {
+					for(int i= 1; i <= maxTrx; i+=numTrx) {
+						for(int j= 1; j <= numTrx; j++) {
+							sendMessage();
+						}
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}).start();
+		}else {
+			sendMessage();
+		}
+	}
+	
+	private void sendMessage() {
+		ISOMsg iso = new ISOMsg();
+		try {
+			//TODO sequence trace
+			Date d = new Date();
+			long mls = d.getTime();
+			long trace = mls % 1000000;
+			String traceNumber = ISOUtil.zeropad(String.valueOf(trace), 6);
+			
+			iso.setMTI("0200");
+			iso.set(new ISOField(2, "6274921575008589"));
+			iso.set(new ISOField(3, "810071"));
+			iso.set(new ISOField(4, "10"));
+			iso.set(new ISOField(7, ISODate.getDateTime(d)));		
+			iso.set(new ISOField(11, traceNumber));
+			iso.set(new ISOField(18,"6012"));
+			iso.set(new ISOField(22,"121"));
+			iso.set(new ISOField(32,"627492"));
+			iso.set(new ISOField(33,"627492"));
+			iso.set(new ISOField(35,"6274921575008589=18030000006"));
+			iso.set(new ISOField(37,ISODate.getDateTime(d).substring(0, 6)+""+traceNumber));
+			iso.set(new ISOField(41,"VSIM0003"));
+			iso.set(new ISOField(42,"CO.MLPT"));
+			iso.set(new ISOField(48,"0082285398884"));
+			iso.set(new ISOField(49,"360"));
+			iso.set(new ISOBinaryField(52, ISOUtil.hex2byte("2BF438AC0E4B53F8")));
+			mux.send(iso);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+	/****
+	 * CheckBox State Change listener
+	 */
 	@Override
 	public void stateChanged(ChangeEvent e) {
 		Object obj = e.getSource();
